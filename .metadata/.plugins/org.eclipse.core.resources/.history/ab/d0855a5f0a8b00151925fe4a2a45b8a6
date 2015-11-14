@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class ReadFromFile {
+	
+	public ArrayList<String> readFromFile(int size, BufferedReader br)throws IOException{
+		//Class variables
+		ArrayList<String> fileLines = new ArrayList<String>();
+		String sCurrentLine = " ";
+	
+		while (size != 0 && sCurrentLine != null) {
+			//Check for errors while opening, reading, and closing file
+			try {
+				
+				//Read from file stream
+				sCurrentLine = br.readLine();
+				if(sCurrentLine != null)
+					//Sanitize line before saving
+					
+					
+					//save line to array list
+					fileLines.add(sCurrentLine);
+					
+			} //end try block
+			catch (IOException e) {
+				e.printStackTrace();
+			} //end 2nd catch block
+			--size;
+		}// end while loop
+		//System.out.println(sCurrentLine);
+		return fileLines;
+	}//end readFromFile method
+	
+	//Method to remove all non alphabetic characters
+	//Will return an array of only words
+	public String[] sanitizeAndSplit(ArrayList<String> myChunk){
+		String myStringArray[] = {};
+			
+		//Make all letters lowercase
+		//Split array list into individual words
+		//Remove all non alphabetic characters
+		for(String temp : myChunk){
+			myStringArray = temp.split("\\s+");
+			for (String word : myStringArray) {
+				word.toLowerCase();
+				word.replaceAll("\\W", "");
+				word.trim();
+			}		
+		}
+
+		return myStringArray;
+	}//end sanitize method
+	
+}//end Read From File class
