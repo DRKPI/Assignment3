@@ -1,0 +1,129 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+//	public static void inputValidation(String[] args){
+//		//Error check the input
+//				//Check if number of arguments are as expected
+//				if(args.length < 3 || args.length > 3){
+//					System.out.println("Usage: java WordCount <file|directory> <chunk size 10-5000> <num of threads 1-100>");
+//					System.exit(1);
+//				}
+//				//Check if args[0] is a file or directory
+//				if(file_Directory.exists() && !file_Directory.isDirectory()){
+//					// Print error if file/directory does not exist
+//					try {
+//						//Open file stream
+//						br = new BufferedReader(new FileReader(file_Directory));
+//					} catch (FileNotFoundException e1) {
+//						System.out.println("No such file/directory: " + fileName);
+//					}//end 1st catch block
+//				}else if(file_Directory.isDirectory()){
+//					try {
+//						Files.walk(Paths.get(args[0])).forEach(filePath -> {
+//							if(Files.isRegularFile(filePath)){
+//								namesOfFiles.add(arg0)
+//							}
+//						});
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						System.out.println("No such file/directory: " + fileName);
+//						e.printStackTrace();
+//					}
+//				}else{
+//					System.out.println("No such file/directory: " + fileName);
+//				}
+//				
+//			
+//	}//end validation method
+	
+	//main method
+	//Purpose is to start program and validate input and run threads method
+	public static void main(String[] args) {
+		//Class variables
+		String dirName = "wikipediaAA";
+		String fileName = "wikipediaAA\\wiki_00";//"TestFile\\test_00.txt";
+		int chunkSize = Integer.parseInt(args[1]);
+		int numThreads = Integer.parseInt(args[2]);
+		BufferedReader br = null;
+		ArrayList <String> namesOfFiles = null;
+		
+		//Create Thread pool object
+		ExecutorService service = Executors.newFixedThreadPool(numThreads);
+		//Create instance of File
+		File file_Directory = new File(args[0]);
+		//File file_Directory = new File(dirName);
+		File file_Directory2 = new File(fileName);
+		//Create instance of ReadFromFile
+		Threads th = new Threads();
+		
+		//inputValidation(args);
+		
+		//Check if args[0] is a file or directory
+		if(file_Directory.exists() && !file_Directory.isDirectory()){
+			// Print error if file/directory does not exist
+			try {
+				//Open file stream
+				br = new BufferedReader(new FileReader(file_Directory));
+			} catch (FileNotFoundException e1) {
+				System.out.println("No such file/directory: " + fileName);
+			}//end 1st catch block
+		}else if(file_Directory.isDirectory()){
+			try {
+				Files.walk(Paths.get(args[0])).forEach(filePath -> {
+					if(Files.isRegularFile(filePath)){
+						namesOfFiles.add(args[0]);
+					}
+				});
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("No such file/directory: " + fileName);
+				e.printStackTrace();
+			}
+		}else{
+			System.out.println("No such file/directory: " + fileName);
+		}
+		
+				
+		//Open file stream
+		try {
+			br = new BufferedReader(new FileReader(file_Directory2));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		//Don't even know if this is needed cause not sure if a thread could
+		//even fail to create or run.
+		try {
+			//Get file chunk from file
+			ArrayList<String> chunkArray = th.readFromFile(chunkSize, br);
+				
+			//Start thread pool
+			service.execute(new Threads(chunkArray));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.out.println("Thread was not created.");
+			e.printStackTrace();
+		}
+		
+//		try {
+//			br.close();
+//			//service.shutdown();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+
+	}//end main method
+
+}//end Main class
