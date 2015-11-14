@@ -67,7 +67,6 @@ public class WordCount {
 		
 		//inputValidation(args);
 
-
 		
 		//Check if args[0] is a file or directory
 		if(file_Directory.exists() && !file_Directory.isDirectory()){
