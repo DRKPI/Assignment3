@@ -21,7 +21,7 @@ public class ReadFromFile {
             } //end try block
             catch (IOException e) {
                 e.printStackTrace();
-            } //end 2nd catch block
+            } //end catch block
             --size;
         }// end while loop
 

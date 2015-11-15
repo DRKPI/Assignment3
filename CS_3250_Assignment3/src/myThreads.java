@@ -7,16 +7,14 @@ import java.io.BufferedReader;
 
 public class myThreads implements Runnable, Comparator{
 	//Class variables
-	private ArrayList<String> myChunk;
+	private final ArrayList<String> myChunk;
 	private Map<String, Integer> hm = new HashMap<String, Integer>();
 	
 	//Threads Constructor
 	public myThreads(ArrayList<String> chunk){
+		this.myChunk = chunk;
 	}//end constructor
-	
-	public myThreads() {
 
-	}
 
 	@Override
 	public int compare(Object arg0, Object arg1) {
@@ -91,33 +89,5 @@ public class myThreads implements Runnable, Comparator{
 		//Write hash map key and values to a chunk file
 		
 	}//end writeChunkFiles
-	
-	public ArrayList<String> readFromFile(int size, BufferedReader br){
-		//variables
-		ArrayList<String> fileLines = new ArrayList<String>();
-		String sCurrentLine = " ";
-			
-		while (size != 0 && sCurrentLine != null) {
-			//Check for errors while opening, reading, and closing file
-			try {
-						
-				//Read from file stream
-				sCurrentLine = br.readLine();
-				if(sCurrentLine != null)
-					//Sanitize line before saving
-							
-							
-					//save line to array list
-					fileLines.add(sCurrentLine);
-							
-			} //end try block
-			catch (IOException e) {
-				e.printStackTrace();
-			} //end 2nd catch block
-			--size;
-		}// end while loop
-		//System.out.println(sCurrentLine);
-		return fileLines;
-	}//end readFromFile
 
 }//end myThreads class
