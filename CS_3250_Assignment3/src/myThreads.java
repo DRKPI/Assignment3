@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.io.BufferedReader;
 
 public class myThreads implements Runnable, Comparator{
@@ -16,12 +15,11 @@ public class myThreads implements Runnable, Comparator{
 	}//end constructor
 	
 	public myThreads() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	@Override
 	public int compare(Object arg0, Object arg1) {
-		// TODO Auto-generated method stub
 		return 0;
 	}//end compare method
 	
@@ -76,7 +74,7 @@ public class myThreads implements Runnable, Comparator{
 				myStringArray = temp.split("\\s+");
 				for (String word : myStringArray) {
 					word.toLowerCase();
-					word.replaceAll("\\W", "");
+					word.replaceAll("\\W+", "");
 					word.trim();
 				}		
 			}
