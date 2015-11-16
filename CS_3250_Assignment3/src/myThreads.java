@@ -24,7 +24,6 @@ public class myThreads implements Runnable{
 		
 		for (int i = 0; i < myChunk.size(); i++) {
 			System.out.println(myChunk.get(i));
-			System.out.println("I'm a thread!!");
 		}
 	}//end run method
 	
@@ -68,13 +67,16 @@ public class myThreads implements Runnable{
 				for (String word : myStringArray) {
 					word.toLowerCase();
 					word.replaceAll("\\W+", "");
+					//word.replaceAll();//need to remove numbers
 					word.trim();
 				}		
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(myStringArray);
+		for (int i = 0; i < myStringArray.length; ++i) {
+			System.out.println(myStringArray[i]);
+		}
 		return myStringArray;
 	}//end sanitize method
 	

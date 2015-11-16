@@ -14,6 +14,8 @@ public class ReadFromFile {
                 //Read from file stream
                 sCurrentLine = br.readLine();
                 if(sCurrentLine != null)
+                   //make input lowercase
+                   //sCurrentLine.toLowerCase();
                    //save line to array list
                     fileLines.add(sCurrentLine);
 

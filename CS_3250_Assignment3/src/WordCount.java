@@ -18,6 +18,7 @@ public class WordCount {
 		//Variables
 		ArrayList<String> filesInFolder = new ArrayList<String>();
 		File file_DirectoryFromArgs = new File(myArgs[0]);
+		File[] files = file_DirectoryFromArgs.listFiles();
 
 		//Error check the input
 		//Check if number of arguments are as expected and if values of arguments are as expected
@@ -51,27 +52,11 @@ public class WordCount {
 		//Check if args[0] is a directory
 		else if(file_DirectoryFromArgs.isDirectory()){
 
-				//TODO Write code that puts files from dir into filesInFolder arraylist
-
-
-//			try {
-//
-////				filesInFolder = Files.walk( Paths.get( args[0] ) )
-////						.filter( Files::isRegularFile )
-////						.map( Path::toFile )
-////						.collect( Collectors.toList() );
-//
-////				Files.walk(Paths.get(args[0])).forEach(filePath -> {
-////					if(Files.isRegularFile(filePath)){
-//////						String namesOfFiles = args[0];
-////						fileList.add( filePath );
-////					}
-////				});
-//			} catch (IOException e) {
-//				//
-//				System.out.println("No such file/directory: " + file_DirectoryFromArgs);
-//				e.printStackTrace();
-//			}
+			//Copy file names into arraylist
+			for (File f: files) {
+				//Save file names into arraylist.
+				filesInFolder.add(file_DirectoryFromArgs + "\\" + f.getName());
+			}
 		}
 		//if not a file or directory print error message
 		else{
@@ -89,6 +74,7 @@ public class WordCount {
 	public static void main(String[] args) {
 		//Variables for arg array
 		String[] myArgs = args;
+
 		ArrayList<String> filesInFolder = new ArrayList<String>();
 
 		//Call validation method to verify all input
@@ -104,34 +90,38 @@ public class WordCount {
 		//Create Thread pool object to create specified number of threads
 		ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
-		//for loop to create desired num of threads
-		for(int i = 0; i < filesInFolder.size(); ++i) {
-			//Open file stream
-			try {
-				br = new BufferedReader(new FileReader(filesInFolder.get(i)));
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
-			}
-
-
-			int j = 0;
-			for (String file : filesInFolder) {
-				//Get file chunk from file
-				chunkArray.add(rf.readFromFile(chunkSize, br));
-				//Send the file chunk to thread pool
+		//while(numThreads != 0) {
+			//for loop to create desired num of threads
+			for (int i = 0; i < filesInFolder.size(); ++i) {
+				//Open file stream
 				try {
-					//Start thread pool
-					ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
-					service.execute(new myThreads(myPass));
-					++j;
-				} catch (Exception e) {
-					System.out.println("Thread was not created.");
-					e.printStackTrace();
+					br = new BufferedReader(new FileReader(filesInFolder.get(i)));
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
 				}
-			}
 
 
-		}
+				int j = 0;
+				for (String file : filesInFolder) {
+					//Get file chunk from file
+					chunkArray.add(rf.readFromFile(chunkSize, br));
+					//Send the file chunk to thread pool
+					try {
+						//Start thread pool
+						ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
+						service.execute(new myThreads(myPass));
+						++j;
+					} catch (Exception e) {
+						System.out.println("Thread was not created.");
+						e.printStackTrace();
+					}
+				}
+
+				System.out.println("I'm a thread!!");
+
+			}//end for loop to create threads
+
+		//}
 
 		//Shutdown the thread pool so no more items added to queue
 		service.shutdown();
