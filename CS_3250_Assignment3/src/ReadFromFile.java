@@ -11,7 +11,6 @@ public class ReadFromFile {
         while (size != 0 && sCurrentLine != null) {
             //Check for errors while opening, reading, and closing file
             try {
-
                 //Read from file stream
                 sCurrentLine = br.readLine();
                 if(sCurrentLine != null)
