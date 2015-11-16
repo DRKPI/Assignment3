@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class WordCount {
 	//inputValidation method
@@ -46,17 +45,8 @@ public class WordCount {
 		//Check if args[0] is a file
 		if(file_DirectoryFromArgs.exists() && !file_DirectoryFromArgs.isDirectory()){
 			String fileName = myArgs[0];
-			//Save file name into arraylist. Using args[0] so that the name is a string
+			//Save file name into arraylist.
 			filesInFolder.add(fileName);
-
-//			// Catch and print error if file does not open or file_DirectoryFromArgs does not exist
-//			try {
-//
-//				//Open file stream
-//				br = new BufferedReader(new FileReader(file_DirectoryFromArgs));
-//			} catch (FileNotFoundException e1) {
-//				System.out.println("No such file/directory: " + file_DirectoryFromArgs);
-//			}//end 1st catch block
 		}
 		//Check if args[0] is a directory
 		else if(file_DirectoryFromArgs.isDirectory()){
@@ -100,9 +90,9 @@ public class WordCount {
 		//Variables for arg array
 		String[] myArgs = args;
 		ArrayList<String> filesInFolder = new ArrayList<String>();
+
 		//Call validation method to verify all input
 		filesInFolder = inputValidation(myArgs);
-
 
 		//Class variables
 		int chunkSize = Integer.parseInt(args[1]);
@@ -114,7 +104,7 @@ public class WordCount {
 		//Create Thread pool object to create specified number of threads
 		ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
-		//for
+		//for loop to create desired num of threads
 		for(int i = 0; i < filesInFolder.size(); ++i) {
 			//Open file stream
 			try {
@@ -122,11 +112,13 @@ public class WordCount {
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
-			int j = 0;
-			for(String file : filesInFolder) {
 
+
+			int j = 0;
+			for (String file : filesInFolder) {
 				//Get file chunk from file
 				chunkArray.add(rf.readFromFile(chunkSize, br));
+				//Send the file chunk to thread pool
 				try {
 					//Start thread pool
 					ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
@@ -137,6 +129,7 @@ public class WordCount {
 					e.printStackTrace();
 				}
 			}
+
 
 		}
 

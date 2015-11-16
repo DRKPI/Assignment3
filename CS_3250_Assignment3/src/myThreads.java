@@ -2,41 +2,37 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.PrintWriter;
 
-public class myThreads implements Runnable, Comparator{
+public class myThreads implements Runnable{
 	//Class variables
 	private final ArrayList<String> myChunk;
-	private Map<String, Integer> hm = new HashMap<String, Integer>();
+	private HashMap<String, Integer> hm = new HashMap<String, Integer>();
 	
 	//Threads Constructor
 	public myThreads(ArrayList<String> chunk){
 		this.myChunk = chunk;
 	}//end constructor
-
-
-	@Override
-	public int compare(Object arg0, Object arg1) {
-		return 0;
-	}//end compare method
 	
 	//Overridden run method
 	public void run(){
 		//Count how many times each word is present
 		//First clean out all unnecessary characters and split line into individual words
 		//Then write chunks out to files
-		writeChunkFiles(countWords(myChunk));
+		writeChunkFiles(countWords(sanitizeAndSplit(myChunk)));
 		
 		for (int i = 0; i < myChunk.size(); i++) {
 			System.out.println(myChunk.get(i));
+			System.out.println("I'm a thread!!");
 		}
 	}//end run method
 	
 	
 	
 	//Performs the counting for the key and values
-	public HashMap<String, Integer> countWords(ArrayList<String> myChunk){
+	public HashMap<String, Integer> countWords(String[] myChunk){
+		//Each chunk file should be in descending order and keys lowercased
 		//count the words and save in a hashmap
 		try {
 			for(String w:myChunk){
@@ -48,15 +44,14 @@ public class myThreads implements Runnable, Comparator{
 				}
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 //		for (Map.Entry<String, Integer> entry : hm.entrySet()) {
 //			System.out.println(entry.getKey() + entry.getValue() + "\n");
 //		}
-		System.out.println(hm);
-		return null;
+
+		return hm;
 	}
 	
 	//Method to remove all non alphabetic characters
@@ -77,17 +72,59 @@ public class myThreads implements Runnable, Comparator{
 				}		
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		System.out.println(myStringArray);
 		return myStringArray;
 	}//end sanitize method
 	
 	//Method to write chunk files
 	public void writeChunkFiles(HashMap<String, Integer> hm){
+		//Call method to create the output/ directory
+		createDirectory();
+
+		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase
 		//Write hash map key and values to a chunk file
-		
+		//PrintWriter writer = new PrintWriter("", "UTF-8");
+
+		//writer.close();
 	}//end writeChunkFiles
+
+	//Method to create the output/ directory
+	public void createDirectory(){
+		//Variables
+		File dirName = new File("output/");
+		File[] files = dirName.listFiles();
+		//check if output/ already exists. If exists delete it before creating new one
+		if(dirName.isDirectory()){
+			//Check if files are in folder that need to be deleted
+			if(files != null) {
+				//delete files in folder
+				for (File f : files) {
+					f.delete();
+				}
+			}
+			//Delete the directory before creating a new one
+			try {
+				dirName.delete();
+				System.out.println("Directory deleted");
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				System.out.println("Cannot delete output directory, please try again!");
+				System.exit(0);
+			}
+		}
+
+		//Create directory
+		try {
+			dirName.mkdir();
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			System.out.println("Cannot create output directory, please try again!");
+			System.exit(0);
+		}
+	}//end createDirectory
 
 }//end myThreads class

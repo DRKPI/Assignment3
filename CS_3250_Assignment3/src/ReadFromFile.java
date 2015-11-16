@@ -22,7 +22,6 @@ public class ReadFromFile {
             catch (IOException e) {
                 e.printStackTrace();
             } //end catch block
-            --size;
         }// end while loop
 
         return fileLines;
