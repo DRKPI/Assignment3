@@ -7,54 +7,46 @@ public class myThreads implements Runnable{
 	//Class variables
 	private final ArrayList<String> myChunk;
 	private HashMap<String, Integer> hm = new HashMap<String, Integer>();
-	
+
 	//Threads Constructor
 	public myThreads(ArrayList<String> chunk){
 		this.myChunk = chunk;
+		this.run();
 	}//end constructor
-	
-	//Overridden run method
+
 	public void run(){
 		//Count how many times each word is present
 		//First clean out all unnecessary characters and split line into individual words
 		//Then write chunks out to files
 
-		writeChunkFiles(countWords(sanitizeAndSplit(myChunk)));
-		
+		sanitizeAndSplit(myChunk);
+
 //		for (int i = 0; i < myChunk.size(); i++) {
 //			System.out.println(myChunk.get(i));
 //		}
 	}//end run method
-	
-	
-	
-	//Performs the counting for the key and values
-	public HashMap<String, Integer> countWords(String[] myChunk){
-		//Each chunk file should be in descending order and keys lowercased
-		//count the words and save in a hashmap
-		try {
-			for(String w:myChunk){
-				Integer freq = hm.get(w); //use word=key to get value=freq
-				if(freq == null){ //word doesn't exist
-					hm.put(w, 1);
-				}else{ //word exists, increment count
-					hm.put(w, + freq+1);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-			System.out.println(entry.getKey() + entry.getValue() + "\n");
-		}
 
-		return hm;
-	}
-	
+	//Overridden run method
+//	public Runnable run2(){
+//		//Count how many times each word is present
+//		//First clean out all unnecessary characters and split line into individual words
+//		//Then write chunks out to files
+//
+//		sanitizeAndSplit(myChunk);
+//
+////		for (int i = 0; i < myChunk.size(); i++) {
+////			System.out.println(myChunk.get(i));
+////		}
+//		return null;
+//	}//end run method
+
+
+
+
+
 	//Method to remove all non alphabetic characters
 	//Will return an array of only words
-	public String[] sanitizeAndSplit(ArrayList<String> myChunk){
+	public void sanitizeAndSplit(ArrayList<String> myChunk){
 		String myStringArray[] = {};
 
 		//Make all letters lowercase
@@ -64,42 +56,58 @@ public class myThreads implements Runnable{
 		try {
 
 			for(String temp : myChunk){
-				temp = temp.toLowerCase();
-				myStringArray = temp.split("\\s+");
-				for (String word : myStringArray) {
-					word = word.replaceAll("\\W+", "");
-					word = word.replaceAll("[1234567890_]", "");//need to remove numbers
-					word = word.trim();
-
-					//Put sanitized words into hashMap and count
-					Integer freq = hm.get(word); //use word=key to get value=freq
-					if(freq == null){ //word doesn't exist
-						hm.put(word, 1);
-					}else{ //word exists, increment count
-						hm.put(word, + freq+1);
+				if(temp != null) {
+					temp = temp.toLowerCase();
+					myStringArray = temp.split("\\s+");
+					for (String word : myStringArray) {
+						word = word.replaceAll("\\W+", "");
+						word = word.replaceAll("[1234567890_]", "");//need to remove numbers
+						word = word.trim();
+						countWords(word);
 					}
+
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
+	}//end sanitize method
 
-		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-			System.out.println(entry.getKey() + entry.getValue() + "\n");
+
+	//Performs the counting for the key and values
+	public void countWords(String word){
+		//Each chunk file should be in descending order and keys lowercased
+		//count the words and save in a hashmap
+		try {
+
+			Integer freq = hm.get(word); //use word=key to get value=freq
+			if(freq == null){ //word doesn't exist
+				hm.put(word, 1);
+			}else{ //word exists, increment count
+				hm.put(word, freq+1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-//		//For testing purposes
-//		for (int i = 0; i < myStringArray.length; ++i) {
-//			System.out.println(myStringArray[i]);
-//		}
-		return null; //myStringArray;
-	}//end sanitize method
-	
+		writeChunkFiles(hm);
+
+//			for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
+//				System.out.println(entry.getKey() + "\t" + entry.getValue() + "\n");
+//			}
+
+	}
+
 	//Method to write chunk files
 	public void writeChunkFiles(HashMap<String, Integer> hm){
 		//Call method to create the output/ directory
 		createDirectory();
+
+		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
+			System.out.println(entry.getKey() + "\t" + entry.getValue() + "\n");
+		}
 
 		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase
 		//Write hash map key and values to a chunk file
