@@ -109,6 +109,7 @@ public class myThreads implements Runnable{
 			System.out.println(entry.getKey() + "\t" + entry.getValue() + "\n");
 		}
 
+
 		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase
 		//Write hash map key and values to a chunk file
 //		Writer writer = null;
