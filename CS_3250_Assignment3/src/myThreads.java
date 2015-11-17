@@ -32,22 +32,22 @@ public class myThreads implements Runnable{
 	public HashMap<String, Integer> countWords(String[] myChunk){
 		//Each chunk file should be in descending order and keys lowercased
 		//count the words and save in a hashmap
-//		try {
-//			for(String w:myChunk){
-//				Integer freq = hm.get(w); //use word=key to get value=freq
-//				if(freq == null){ //word doesn't exist
-//					hm.put(w, 1);
-//				}else{ //word exists, increment count
-//					hm.put(w, + freq+1);
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			for(String w:myChunk){
+				Integer freq = hm.get(w); //use word=key to get value=freq
+				if(freq == null){ //word doesn't exist
+					hm.put(w, 1);
+				}else{ //word exists, increment count
+					hm.put(w, + freq+1);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-//		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-//			System.out.println(entry.getKey() + entry.getValue() + "\n");
-//		}
+		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
+			System.out.println(entry.getKey() + entry.getValue() + "\n");
+		}
 
 		return hm;
 	}
@@ -55,26 +55,36 @@ public class myThreads implements Runnable{
 	//Method to remove all non alphabetic characters
 	//Will return an array of only words
 	public String[] sanitizeAndSplit(ArrayList<String> myChunk){
-		//String myStringArray[] = {};
-				
-//		try {
-//			//Make all letters lowercase
-//			//Split array list into individual words
-//			//Remove all non alphabetic characters
-//			for(String temp : myChunk){
-//				temp.toLowerCase();
-//				myStringArray = temp.split("\\s+");
-//				for (String word : myStringArray) {
-//					word = word.replaceAll("\\W+", "");
-//					word = word.replaceAll("[1234567890_]", "");//need to remove numbers
-//					word = word.trim();
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		String myStringArray[] = {};
 
-		//For testing purposes
+		//Make all letters lowercase
+		//Split array list into individual words
+		//Remove all non alphabetic characters
+		//Put into hashMap
+		try {
+
+			for(String temp : myChunk){
+				temp = temp.toLowerCase();
+				myStringArray = temp.split("\\s+");
+				for (String word : myStringArray) {
+					word = word.replaceAll("\\W+", "");
+					word = word.replaceAll("[1234567890_]", "");//need to remove numbers
+					word = word.trim();
+
+					//Put sanitized words into hashMap and count
+					Integer freq = hm.get(word); //use word=key to get value=freq
+					if(freq == null){ //word doesn't exist
+						hm.put(word, 1);
+					}else{ //word exists, increment count
+						hm.put(word, + freq+1);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+//		//For testing purposes
 //		for (int i = 0; i < myStringArray.length; ++i) {
 //			System.out.println(myStringArray[i]);
 //		}
