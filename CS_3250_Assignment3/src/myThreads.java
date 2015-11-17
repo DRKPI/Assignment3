@@ -84,6 +84,11 @@ public class myThreads implements Runnable{
 			e.printStackTrace();
 		}
 
+
+		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
+			System.out.println(entry.getKey() + entry.getValue() + "\n");
+		}
+
 //		//For testing purposes
 //		for (int i = 0; i < myStringArray.length; ++i) {
 //			System.out.println(myStringArray[i]);

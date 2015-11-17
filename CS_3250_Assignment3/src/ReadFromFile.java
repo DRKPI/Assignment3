@@ -40,34 +40,34 @@ public class ReadFromFile {
         }
 
 
-        try {
-            //Make all letters lowercase
-            //Split array list into individual words
-            //Remove all non alphabetic characters
-            for(String temp : fileLines){
-                temp = temp.toLowerCase();
-                myStringArray = temp.split("\\s+");
-                for (String word : myStringArray) {
-                    word = word.replaceAll("\\W+", "");
-                    word = word.replaceAll("[1234567890_]", "");//need to remove numbers
-                    word = word.trim();
-
-                    Integer freq = hm.get(word); //use word=key to get value=freq
-                    if(freq == null){ //word doesn't exist
-                        hm.put(word, 1);
-                    }else{ //word exists, increment count
-                        hm.put(word, + freq+1);
-                    }
-
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-            System.out.println(entry.getKey() + entry.getValue() + "\n");
-        }
+//        try {
+//            //Make all letters lowercase
+//            //Split array list into individual words
+//            //Remove all non alphabetic characters
+//            for(String temp : fileLines){
+//                temp = temp.toLowerCase();
+//                myStringArray = temp.split("\\s+");
+//                for (String word : myStringArray) {
+//                    word = word.replaceAll("\\W+", "");
+//                    word = word.replaceAll("[1234567890_]", "");//need to remove numbers
+//                    word = word.trim();
+//
+//                    Integer freq = hm.get(word); //use word=key to get value=freq
+//                    if(freq == null){ //word doesn't exist
+//                        hm.put(word, 1);
+//                    }else{ //word exists, increment count
+//                        hm.put(word, + freq+1);
+//                    }
+//
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
+//            System.out.println(entry.getKey() + entry.getValue() + "\n");
+//        }
 
 
 
