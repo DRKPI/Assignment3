@@ -1,9 +1,7 @@
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.io.File;
-import java.io.PrintWriter;
 
 public class myThreads implements Runnable{
 	//Class variables
@@ -20,11 +18,12 @@ public class myThreads implements Runnable{
 		//Count how many times each word is present
 		//First clean out all unnecessary characters and split line into individual words
 		//Then write chunks out to files
+
 		writeChunkFiles(countWords(sanitizeAndSplit(myChunk)));
 		
-		for (int i = 0; i < myChunk.size(); i++) {
-			System.out.println(myChunk.get(i));
-		}
+//		for (int i = 0; i < myChunk.size(); i++) {
+//			System.out.println(myChunk.get(i));
+//		}
 	}//end run method
 	
 	
@@ -33,20 +32,20 @@ public class myThreads implements Runnable{
 	public HashMap<String, Integer> countWords(String[] myChunk){
 		//Each chunk file should be in descending order and keys lowercased
 		//count the words and save in a hashmap
-		try {
-			for(String w:myChunk){
-				Integer freq = hm.get(w); //use word=key to get value=freq
-				if(freq == null){ //word doesn't exist
-					hm.put(w + "\t", 1);
-				}else{ //word exists, increment count
-					hm.put(w + "\t", ++freq);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			for(String w:myChunk){
+//				Integer freq = hm.get(w); //use word=key to get value=freq
+//				if(freq == null){ //word doesn't exist
+//					hm.put(w, 1);
+//				}else{ //word exists, increment count
+//					hm.put(w, + freq+1);
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
-//		for (Map.Entry<String, Integer> entry : hm.entrySet()) {
+//		for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
 //			System.out.println(entry.getKey() + entry.getValue() + "\n");
 //		}
 
@@ -56,28 +55,30 @@ public class myThreads implements Runnable{
 	//Method to remove all non alphabetic characters
 	//Will return an array of only words
 	public String[] sanitizeAndSplit(ArrayList<String> myChunk){
-		String myStringArray[] = {};
+		//String myStringArray[] = {};
 				
-		try {
-			//Make all letters lowercase
-			//Split array list into individual words
-			//Remove all non alphabetic characters
-			for(String temp : myChunk){
-				myStringArray = temp.split("\\s+");
-				for (String word : myStringArray) {
-					word.toLowerCase();
-					word.replaceAll("\\W+", "");
-					//word.replaceAll();//need to remove numbers
-					word.trim();
-				}		
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		for (int i = 0; i < myStringArray.length; ++i) {
-			System.out.println(myStringArray[i]);
-		}
-		return myStringArray;
+//		try {
+//			//Make all letters lowercase
+//			//Split array list into individual words
+//			//Remove all non alphabetic characters
+//			for(String temp : myChunk){
+//				temp.toLowerCase();
+//				myStringArray = temp.split("\\s+");
+//				for (String word : myStringArray) {
+//					word = word.replaceAll("\\W+", "");
+//					word = word.replaceAll("[1234567890_]", "");//need to remove numbers
+//					word = word.trim();
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+
+		//For testing purposes
+//		for (int i = 0; i < myStringArray.length; ++i) {
+//			System.out.println(myStringArray[i]);
+//		}
+		return null; //myStringArray;
 	}//end sanitize method
 	
 	//Method to write chunk files
@@ -87,9 +88,21 @@ public class myThreads implements Runnable{
 
 		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase
 		//Write hash map key and values to a chunk file
-		//PrintWriter writer = new PrintWriter("", "UTF-8");
+//		Writer writer = null;
+//		try {
+//			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("filename.chunk", "UTF-8")));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				writer.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 
-		//writer.close();
+
+
 	}//end writeChunkFiles
 
 	//Method to create the output/ directory
@@ -109,7 +122,6 @@ public class myThreads implements Runnable{
 			//Delete the directory before creating a new one
 			try {
 				dirName.delete();
-				System.out.println("Directory deleted");
 			}
 			catch(Exception e){
 				e.printStackTrace();

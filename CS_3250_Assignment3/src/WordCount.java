@@ -29,11 +29,11 @@ public class WordCount {
 			System.exit(1);
 		}
 		//if chunkSize is too small or big print error
-		else if(Integer.parseInt(myArgs[1]) < 10 || Integer.parseInt(myArgs[1]) > 5000){
-			System.out.println("Usage: java WordCount <file|directory> <chunk size 10-5000> <num of threads 1-100>");
-			System.out.println("Chunksize is wrong!");
-			System.exit(1);
-		}
+//		else if(Integer.parseInt(myArgs[1]) < 10 || Integer.parseInt(myArgs[1]) > 5000){
+//			System.out.println("Usage: java WordCount <file|directory> <chunk size 10-5000> <num of threads 1-100>");
+//			System.out.println("Chunksize is wrong!");
+//			System.exit(1);
+//		}
 		//if number of threads is too small or big print error
 		else if(Integer.parseInt(myArgs[2]) < 1 || Integer.parseInt(myArgs[2]) > 100) {
 			System.out.println("Usage: java WordCount <file|directory> <chunk size 10-5000> <num of threads 1-100>");
@@ -63,8 +63,6 @@ public class WordCount {
 			System.out.println("No such file/directory: " + file_DirectoryFromArgs);
 		}
 
-
-
 		return filesInFolder;
 	}//end validation method
 
@@ -85,40 +83,47 @@ public class WordCount {
 		int numThreads = Integer.parseInt(args[2]);
 		BufferedReader br = null;
 		ReadFromFile rf = new ReadFromFile();
+		ArrayList<String> arrayListOfLines = new ArrayList<String>();
 		List<List<String>> chunkArray = new ArrayList<List<String>>();
 		
 		//Create Thread pool object to create specified number of threads
 		ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
-		//while(numThreads != 0) {
+		//while() {
 			//for loop to create desired num of threads
 			for (int i = 0; i < filesInFolder.size(); ++i) {
 				//Open file stream
 				try {
-					br = new BufferedReader(new FileReader(filesInFolder.get(i)));
+					FileReader reader = new FileReader(filesInFolder.get(i));
+					br = new BufferedReader(reader);
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
 
-
-				int j = 0;
-				for (String file : filesInFolder) {
-					//Get file chunk from file
-					chunkArray.add(rf.readFromFile(chunkSize, br));
-					//Send the file chunk to thread pool
-					try {
-						//Start thread pool
-						ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
-						service.execute(new myThreads(myPass));
-						++j;
-					} catch (Exception e) {
-						System.out.println("Thread was not created.");
-						e.printStackTrace();
+				//while() {
+					int j = 0;
+					for (String file : filesInFolder) {
+						//Need to loop till the complete file is read in
+						//while() {
+							//Get file chunk from file
+							//arrayListOfLines =
+						rf.readFromFile(chunkSize, br);
+							chunkArray.add(arrayListOfLines);
+							//Send the file chunk to thread pool
+							try {
+								//Start thread pool
+								ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
+								service.execute(new myThreads(myPass));
+								++j;
+							} catch (Exception e) {
+								System.out.println("Thread was not created.");
+								e.printStackTrace();
+							}
+						//}
 					}
-				}
 
-				System.out.println("I'm a thread!!");
-
+					System.out.println("I'm a thread!!");
+				//}
 			}//end for loop to create threads
 
 		//}
