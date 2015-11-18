@@ -42,8 +42,6 @@ public class WordCount {
 //			System.exit(1);
 //		}
 
-
-
 		//Check if args[0] is a file
 		if(file_DirectoryFromArgs.exists() && !file_DirectoryFromArgs.isDirectory()){
 			String fileName = myArgs[0];
@@ -71,49 +69,67 @@ public class WordCount {
 	//main method
 	//Purpose is to start program and validate input and run threads method
 	public static void main(String[] args) {
-		//Variables for arg array
+		//Variables
 		String[] myArgs = args;
-
-		ArrayList<String> filesInFolder = new ArrayList<String>();
-
-		//Call validation method to verify all input
-		filesInFolder = inputValidation(myArgs);
-
-		//Class variables
 		int chunkSize = Integer.parseInt(args[1]);
 		int numThreads = Integer.parseInt(args[2]);
 		BufferedReader br = null;
 		ReadFromFile rf = new ReadFromFile();
 		ArrayList<String> arrayListOfLines = new ArrayList<String>();
 		List<List<String>> chunkArray = new ArrayList<List<String>>();
+		ArrayList<String> filesInFolder = new ArrayList<String>();
+
+		//Call validation method to verify all input
+		filesInFolder = inputValidation(myArgs);
 
 		//Create Thread pool object to create specified number of threads
 		ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
 		//Delete the output folder if it exists
-
-
-		//for loop to create desired num of threads
-		for (int i = 0; i < filesInFolder.size(); ++i) {
-			//Open file stream
-			try {
-				FileReader reader = new FileReader(filesInFolder.get(i));
-				br = new BufferedReader(reader);
-			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+		File dirName = new File("output");
+		File[] files = dirName.listFiles();
+		//check if output/ already exists. If exists delete it before creating new one
+		if(dirName.isDirectory()){
+			//Check if files are in folder that need to be deleted
+			if(files != null) {
+				//delete files in folder
+				for (File f : files) {
+					f.delete();
+				}
 			}
+			//Delete the directory before before starting new run of program
+			try {
+				dirName.delete();
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				System.out.println("Cannot delete output directory, please try again!");
+				System.exit(2);
+			}
+		}
 
+		//for loop to create a BufferedReader for each file being read
+//		for (int i = 0; i < filesInFolder.size(); ++i) {
+//			//Open file stream
+//			try {
+//				FileReader reader = new FileReader(filesInFolder.get(i));
+//				br = new BufferedReader(reader);
+//			} catch (FileNotFoundException e1) {
+//				e1.printStackTrace();
+//			}
 
+			//for loop to open and read each individual file
 			for (String file : filesInFolder) {
-
+				try {
+					FileReader reader = new FileReader(file);
+					br = new BufferedReader(reader);
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
 				rf.readFromFile(chunkSize, br, numThreads, file);
 
 			}
-
-
-
-			//System.out.println("I'm a thread!!");
-		}//end for loop to create threads
+		//}//end for loop to create threads
 
 
 		//Shutdown the thread pool so no more items added to queue
@@ -131,8 +147,6 @@ public class WordCount {
 			e.printStackTrace();
 			System.out.println("br did not close!");
 		}
-
-
 	}//end main method
 
 }//end WordCount class
