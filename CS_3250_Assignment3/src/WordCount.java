@@ -90,6 +90,8 @@ public class WordCount {
 		//Create Thread pool object to create specified number of threads
 		ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
+		//Delete the output folder if it exists
+
 
 		//for loop to create desired num of threads
 		for (int i = 0; i < filesInFolder.size(); ++i) {
@@ -102,24 +104,10 @@ public class WordCount {
 			}
 
 
-			//int j = 0;
 			for (String file : filesInFolder) {
-				//Need to loop till the complete file is read in
-				//while() {
-				//Get file chunk from file
-				//arrayListOfLines =
-				rf.readFromFile(chunkSize, br, numThreads);
-				//chunkArray.add(arrayListOfLines);
-				//Send the file chunk to thread pool
-//						try {
-//							//Start thread pool
-//							//ArrayList<String> myPass = (ArrayList<String>) chunkArray.get(j);
-//							//service.execute(new myThreads(myPass));
-//							//++j;
-//						} catch (Exception e) {
-//							System.out.println("Thread was not created.");
-//							e.printStackTrace();
-//						}
+
+				rf.readFromFile(chunkSize, br, numThreads, file);
+
 			}
 
 
@@ -136,13 +124,13 @@ public class WordCount {
 		}
 
 		//close any streams
-//		try {
-//			br.close();
-//
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			System.out.println("br did not close!");
-//		}
+		try {
+			br.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("br did not close!");
+		}
 
 
 	}//end main method

@@ -5,20 +5,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ReadFromFile {
-    public ArrayList<String> readFromFile(int size, BufferedReader br, int numThreads){
+    public ArrayList<String> readFromFile(int size, BufferedReader br, int numThreads, String fileName){
         //Class Variables
         ArrayList<String> fileLines = new ArrayList<String>();
         String sCurrentLine = "temp";
         myThreads callThread;
         int i = 0;
+        int chunkNum = 0;
 
         //Create Thread pool object to create specified number of threads
         ExecutorService service = Executors.newFixedThreadPool(numThreads);
 
-        //variables used while testing system, these will be moved to other classes
-        String myStringArray[];
-        HashMap<String, Integer> hm = new HashMap<String, Integer>();
-        String[] myChunk = null;
+//        //variables used while testing system, these will be moved to other classes
+//        String myStringArray[];
+//        HashMap<String, Integer> hm = new HashMap<String, Integer>();
+//        String[] myChunk = null;
 
         //Check for errors while opening, reading, and closing file
         try {
@@ -35,10 +36,11 @@ public class ReadFromFile {
 
                 //when i equals size send fileLines to a thread to be processed
                 if (i == size){
+                    ++chunkNum;
 
                     for (int j = 0; j < fileLines.size(); j++) {
                         try {
-                            callThread = new myThreads(fileLines);
+                            callThread = new myThreads(fileLines, fileName, chunkNum);
                             service.execute(callThread);
 
                         } catch (Exception e) {
@@ -56,6 +58,7 @@ public class ReadFromFile {
 
 
             }// end while loop
+            chunkNum = 0;
         }
         catch (Exception e) {
             e.printStackTrace();
