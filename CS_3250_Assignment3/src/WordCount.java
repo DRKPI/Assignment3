@@ -3,15 +3,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class WordCount {
+	//Class variable
+	private static String directoryName;
 
 	//inputValidation method
 	//Purpose: Verify number of args is correct and if args[0] is a file or directory
@@ -44,17 +43,17 @@ public class WordCount {
 
 		//Check if args[0] is a file
 		if(file_DirectoryFromArgs.exists() && !file_DirectoryFromArgs.isDirectory()){
-			String fileName = myArgs[0];
+			directoryName = myArgs[0];
 			//Save file name into arraylist.
-			filesInFolder.add(fileName);
+			filesInFolder.add(directoryName);
 		}
 		//Check if args[0] is a directory
-		else if(file_DirectoryFromArgs.isDirectory()){
-
+		else if(file_DirectoryFromArgs.exists() && file_DirectoryFromArgs.isDirectory()){
+			directoryName = myArgs[0];
 			//Copy file names into arraylist
 			for (File f: files) {
 				//Save file names into arraylist.
-				filesInFolder.add(file_DirectoryFromArgs + "\\" + f.getName());
+				filesInFolder.add(f.getName());
 			}
 		}
 		//if not a file or directory print error message
@@ -121,7 +120,8 @@ public class WordCount {
 			//for loop to open and read each individual file
 			for (String file : filesInFolder) {
 				try {
-					FileReader reader = new FileReader(file);
+
+					FileReader reader = new FileReader(directoryName + "\\" + file);
 					br = new BufferedReader(reader);
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();

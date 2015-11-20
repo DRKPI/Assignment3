@@ -49,7 +49,7 @@ public class myThreads implements Runnable, Comparator{
 					myStringArray = temp.split("\\s+");
 					for (String word : myStringArray) {
 						word = word.replaceAll("\\W+", "");
-						word = word.replaceAll("[1234567890_]", "");
+						//word = word.replaceAll("[1234567890_]", "");
 						word = word.trim();
 						countWords(word);
 					}
