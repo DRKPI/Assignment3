@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -29,17 +28,15 @@ public class ReadFromFile {
 
                 //when i equals size send fileLines to a thread to be processed
                 if (i == size){
+                    try {
+                        callThread = new myThreads(fileLines, fileName, chunkNum);
+                        service.execute(callThread);
 
-                    for (int j = 0; j < fileLines.size(); j++) {
-                        try {
-                            callThread = new myThreads(fileLines, fileName, chunkNum);
-                            service.execute(callThread);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            System.out.println("Thread did not run!");
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println("Thread did not run!");
                     }
+
                     chunkNum++;//need to send which chunkNum is being processed
                     i = 0;
                     fileLines = new ArrayList<String>();
@@ -50,53 +47,38 @@ public class ReadFromFile {
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        //Shutdown the thread pool so no more items added to queue
+        service.shutdown();
+        //while loop locks access till threads complete their tasks
+        while(!service.isTerminated()){
+
+        }
     }//end readFromFile method
 
-    //Method to write chunk files
-//    public void writeChunkFiles(HashMap<String, Integer> hm, String fileName){
-//        //Call method to create the output/ directory
-//        createDirectory();
-//
-//        //Sort hashMap before sending to file
-//        //TODO sort hashMap in descending order
-//
-//
-//        //Chunk files should be named originalfilename_chunkNum.chunk all lowercase
-//        //Write hash map key and values to a chunk file and save in created directory
-//        Writer writer = null;
-//        try {
-//            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("output\\" + fileName + "_" + chunkNum + ".chunk")));
-//            for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-//                writer.write(entry.getKey() + "\t" + entry.getValue() + "\n");
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                writer.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }//end writeChunkFiles method
-//
-//
-//    //Method to create the output/ directory
-//    public void createDirectory(){
-//        //Variables
-//        File dirName = new File("output");
-//
-//        //Create directory
-//        try {
-//            if (!dirName.exists())
-//                dirName.mkdir();
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//            System.out.println("Cannot create output directory, please try again!");
-//            System.exit(2);
-//        }
-//    }//end createDirectory method
 
+    public ArrayList<String> readFromChunk(BufferedReader br){
+        //Variables
+        ArrayList<String> fileLines = new ArrayList<String>();
+        String sCurrentLine = "temp";
+
+
+        //Check for errors while opening, reading, and closing file
+        try {
+
+            while (sCurrentLine != null) {
+                sCurrentLine = br.readLine();
+
+                //Read from file stream
+                // save line to array list
+                fileLines.add(sCurrentLine);
+
+            }// end while loop
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return fileLines;
+    }//end readFromFile method
 }//end ReadFromFile class

@@ -1,15 +1,10 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
-public class myThreads implements Runnable, Comparator{
+public class myThreads implements Runnable{
 	//Class variables
 	private final ArrayList<String> myChunk;
-	private Map<String, Integer> hm = new HashMap<String, Integer>();
-	private Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+	private Map<String, Word> hm = new HashMap<>();
 	private String fileName;
 	private int chunkNum;
 
@@ -18,16 +13,17 @@ public class myThreads implements Runnable, Comparator{
 		fileName = name;
 		chunkNum = num;
 		this.myChunk = chunk;
-		this.run();
+		//this.run();
 	}//end constructor
 
 	public void run(){
 		//Call sanitize method to start the following process:
 		//First clean out all unnecessary characters and split line into individual words
-		//Count how many times each word is present in file while saving word and count to a hashMap
+		//Count how many times each value is present in file while saving value and count to a hashMap
 		//Then sort map in descending order and write chunks out to files
 
 		sanitizeAndSplit(myChunk);
+		writeChunkFiles(hm);
 	}//end run method
 
 
@@ -49,7 +45,7 @@ public class myThreads implements Runnable, Comparator{
 					myStringArray = temp.split("\\s+");
 					for (String word : myStringArray) {
 						word = word.replaceAll("\\W+", "");
-						//word = word.replaceAll("[1234567890_]", "");
+						//value = value.replaceAll("[1234567890_]", "");
 						word = word.trim();
 						countWords(word);
 					}
@@ -62,44 +58,42 @@ public class myThreads implements Runnable, Comparator{
 
 
 	//Performs the counting for the key and values and places key and value into a hashMap
-	public void countWords(String word){
+	public void countWords(String str){
 		//Each chunk file should be in descending order and keys lowercased
 		//count the words and save in a hashmap
 		try {
 
-			Integer freq = hm.get(word); //use word=key to get value=freq
-			if(freq == null){ //word doesn't exist
-				hm.put(word, 1);
-			}else{ //word exists, increment count
-				hm.put(word, freq+1);
+			Word word = hm.get(str); //use value=key to get value=freq
+			if(word == null){ //value doesn't exist
+				hm.put(str, new Word(str));
+			}else{ //value exists, increment count
+				hm.get(str).increment();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-//		ReadFromFile rf = new ReadFromFile();
-//		rf.writeChunkFiles(hm, fileName);
-		writeChunkFiles(hm);
 	}//end countWords method
 
 
 	//Method to write chunk files
-	public void writeChunkFiles(Map<String, Integer> hm){
+	public void writeChunkFiles(Map<String, Word> hm){
 		//Call method to create the output/ directory
 		createDirectory();
 
 		//Sort hashMap before sending to file
 		//TODO sort hashMap in descending order
-
+		TreeSet<Word> mySet = new TreeSet<>(hm.values());
 
 		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase
 		//Write hash map key and values to a chunk file and save in created directory
 		Writer writer = null;
 		try {
+
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("output\\" + fileName + "_" + chunkNum + ".chunk")));
-			for (HashMap.Entry<String, Integer> entry : hm.entrySet()) {
-				writer.write(entry.getKey() + "\t" + entry.getValue() + "\n");
+			for (Word word : mySet) {
+				writer.write(word.getValue() + "\t" + word.getCount() + "\n");
 			}
 
 		} catch (Exception e) {
@@ -107,7 +101,7 @@ public class myThreads implements Runnable, Comparator{
 		} finally {
 			try {
 				writer.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -131,9 +125,4 @@ public class myThreads implements Runnable, Comparator{
 		}
 	}//end createDirectory method
 
-	@Override
-	public int compare(Object a, Object b) {
-
-		return 0;
-	}
 }//end myThreads class
