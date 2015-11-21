@@ -1,5 +1,8 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
 
 public class myThreads implements Runnable{
 	//Class variables
@@ -45,6 +48,7 @@ public class myThreads implements Runnable{
 					myStringArray = temp.split("\\s+");
 					for (String word : myStringArray) {
 						word = word.replaceAll("\\W+", "");
+						//Was told didn't need to remove numbers
 						//value = value.replaceAll("[1234567890_]", "");
 						word = word.trim();
 						countWords(word);
@@ -78,12 +82,12 @@ public class myThreads implements Runnable{
 
 
 	//Method to write chunk files
+	//Purpose: create output directory, sort hashMap into a descending ordered treeMap and write sorted map values to file
 	public void writeChunkFiles(Map<String, Word> hm){
 		//Call method to create the output/ directory
 		createDirectory();
 
 		//Sort hashMap before sending to file
-		//TODO sort hashMap in descending order
 		TreeSet<Word> mySet = new TreeSet<>(hm.values());
 
 		//Chunk files should be named originalfilename_chunkNum.chunk all lowercase

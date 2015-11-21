@@ -1,10 +1,13 @@
-import java.io.*;
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ReadFromFile {
     private int chunkNum = 0;
+
+    //Method readFromFile
+    //Purpose: read file, create thread pool, and send properly sized chunks to individual threads
     public void readFromFile(int size, BufferedReader br, int numThreads, String fileName){
         //Variables
         ArrayList<String> fileLines = new ArrayList<String>();
@@ -39,7 +42,7 @@ public class ReadFromFile {
 
                     chunkNum++;//need to send which chunkNum is being processed
                     i = 0;
-                    fileLines = new ArrayList<String>();
+                    fileLines = new ArrayList<>();//need new ArrayList for next chunk
                 }
             }// end while loop
             chunkNum = 0;//need to send which chunk num was just used to append to file name
@@ -57,11 +60,12 @@ public class ReadFromFile {
     }//end readFromFile method
 
 
+    //Method readFromChunk
+    //Purpose: read chunk file back into an ArrayList
     public ArrayList<String> readFromChunk(BufferedReader br){
         //Variables
         ArrayList<String> fileLines = new ArrayList<String>();
         String sCurrentLine = "temp";
-
 
         //Check for errors while opening, reading, and closing file
         try {
